@@ -1,0 +1,7 @@
+__pycache__/
+output/
+outputs/
+.env
+setEnv.bat
+*.pyc
+MC_Parkour*

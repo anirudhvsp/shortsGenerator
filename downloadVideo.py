@@ -5,7 +5,7 @@ def download_clip():
         'format': '311',
         'merge_output_format': 'mp4',
         'download_sections': "*13:00-17:00",
-        'outtmpl': 'MC_PARKOUR.mp4'
+        'outtmpl': 'MC_Parkour.mp4'
     }
     
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:

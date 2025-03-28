@@ -46,6 +46,50 @@ python fullWorkflow.py <number_of_iterations>
 python combine.py
 ```
 
+## Docker Usage
+
+### Prebuilt Image
+
+1. Pull the latest Docker image:
+```bash
+docker pull anirudhvsp/shortsgenerator:latest
+```
+
+2. Run the container with your API keys and desired output directory:
+```bash
+docker run -v <your_output_directory>:/app/outputs \
+  -e ELEVENLABS_API_KEY=<your_elevenlabs_api_key> \
+  -e GEMINI_API_KEY=<your_gemini_api_key> \
+  anirudhvsp/shortsgenerator:latest
+```
+
+> **Note:** Replace `<your_output_directory>` with the path to the directory where you want the generated videos to be saved. Replace `<your_elevenlabs_api_key>` and `<your_gemini_api_key>` with your respective API keys.
+
+### Build Locally
+
+If you prefer to build the image locally, follow these steps:
+
+1. Build the Docker image:
+```bash
+docker build -t ccsg-generator .
+```
+
+2. Run the container:
+```bash
+docker run --rm \
+  -e ELEVENLABS_API_KEY=your_key_here \
+  -e GEMINI_API_KEY=your_key_here \
+  -v /path/to/output/directory:/app/outputs \
+  ccsg-generator python fullWorkflow.py <number_of_iterations>
+```
+
+Alternatively, use the provided `run_docker.sh` script:
+```bash
+./run_docker.sh <ELEVENLABS_API_KEY> <GEMINI_API_KEY> <number_of_iterations> <output_directory>
+```
+
+> **Note:** Replace `<output_directory>` with the path to the directory where you want the generated videos to be saved. If not specified, the default is `./outputs` in the current directory.
+
 ## Modifying story content
 The theme of the story can be changed by updating the prompt being sent to the LLM inside the file `story.py`. The simplest way would be to replace Chacha Chaudhary with a character of your choice, or if you know what you're doing, create a new prompt entirely.
 

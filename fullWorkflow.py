@@ -5,6 +5,8 @@ from datetime import datetime
 import story
 import narration
 from moviepy.editor import VideoFileClip, AudioFileClip
+from PIL import Image
+import numpy as np
 
 def create_output_dirs():
     """
@@ -16,6 +18,18 @@ def create_output_dirs():
     for sub in subdirs:
         os.makedirs(os.path.join(base_dir, sub), exist_ok=True)
     return {name: os.path.join(base_dir, name) for name in subdirs}
+
+# Monkey-patch the resize function in moviepy to use Image.Resampling.LANCZOS
+from moviepy.video.fx.resize import resizer
+from PIL import Image
+
+def patched_resizer(pic, newsize):
+    # Ensure newsize dimensions are integers
+    newsize = (int(newsize[0]), int(newsize[1]))
+    resized_image = Image.fromarray(pic).resize(newsize, Image.Resampling.LANCZOS)
+    return np.array(resized_image)  # Convert back to NumPy array
+
+resizer.__globals__['resizer'] = patched_resizer
 
 def main():
     # Create output directories
@@ -66,10 +80,11 @@ def main():
         random_start = random.uniform(0, max_start)
         video_subclip = video_clip.subclip(random_start, random_start + narration_duration)
 
-        # Convert the clip to a TikTok vertical format (9:16)
-        video_resized = video_subclip.resize(height=1920/2)
-        video_vertical = video_resized.crop(x_center=video_resized.w / 2, width=1080/2)
+        # Explicitly use the patched resizer for resizing
+        from moviepy.video.fx.resize import resizer
 
+        video_resized = video_subclip.resize(height=960)
+        video_vertical = video_resized.crop(x_center=video_resized.w/2, width=540)
         # Set the narration as the audio for the video clip
         final_clip = video_vertical.set_audio(audio_clip)
 

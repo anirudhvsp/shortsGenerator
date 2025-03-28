@@ -1,0 +1,11 @@
+# Ignore everything listed in .gitignore
+.gitignore
+
+# Explicitly include MC_PARKOUR.mp4
+!MC_PARKOUR.mp4
+
+# Ignore other unnecessary files
+*.pyc
+__pycache__/
+.env
+outputs/
